@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卫星地图 - 茸联苑 ↔ 松江五中</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { height: 100vh; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        // 中心点：茸联苑和松江五中的中间
+        var center = [31.0081575, 121.2520245];
+        
+        // 创建地图
+        var map = L.map('map', {
+            center: center,
+            zoom: 13,
+            layers: []  // 先不加默认图层
+        });
+        
+        // ESRI 卫星影像图层
+        var satellite = L.tileLayer(
+            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            {
+                attribution: 'Tiles &copy; Esri',
+                maxZoom: 19
+            }
+        );
+        
+        // ESRI 地名标注图层
+        var labels = L.tileLayer(
+            'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+            {
+                attribution: 'Tiles &copy; Esri',
+                maxZoom: 19
+            }
+        );
+        
+        // 默认显示卫星图 + 标注
+        satellite.addTo(map);
+        labels.addTo(map);
+        
+        // 图层控制器
+        var baseMaps = {
+            "ESRI 卫星影像": satellite
+        };
+        
+        var overlayMaps = {
+            "地名标注": labels
+        };
+        
+        L.control.layers(baseMaps, overlayMaps, {
+            position: 'topright',
+            collapsed: false
+        }).addTo(map);
+    </script>
+</body>
+</html>
